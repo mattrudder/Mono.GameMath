@@ -414,7 +414,19 @@ namespace Mono.GameMath
 		public static void CreatePerspectiveFieldOfView (float fieldOfView, float aspectRatio, float nearPlaneDistance,
 			float farPlaneDistance, out Matrix result)
 		{
-			throw new NotImplementedException ();
+			// http://msdn.microsoft.com/en-us/library/bb205351%28v=vs.85%29.aspx
+			double yScale = 1.0f / Math.Tan(fieldOfView / 2);
+			double xScale = yScale / aspectRatio;
+
+			float frustumLength = nearPlaneDistance - farPlaneDistance;
+
+			result = Identity;
+			result.M11 = (float) xScale;
+			result.M22 = (float) yScale;
+			result.M33 = farPlaneDistance / frustumLength;
+			result.M34 = -1;
+			result.M43 = nearPlaneDistance * farPlaneDistance / frustumLength;
+			result.M44 = 0;
 		}
 		
 		public static Matrix CreatePerspectiveOffCenter (float left, float right, float bottom, float top,
