@@ -300,7 +300,28 @@ namespace Mono.GameMath
 		
 		public static void CreateFromQuaternion (ref Quaternion quaternion, out Matrix result)
 		{
-			throw new NotImplementedException ();
+			result = Identity;
+
+			// http://www.flipcode.com/documents/matrfaq.html#Q54
+			float x = quaternion.X;
+			float y = quaternion.Y;
+			float z = quaternion.Z;
+			float w = quaternion.W;
+			float x2 = x * x;
+			float y2 = y * y;
+			float z2 = z * z;
+			
+			result.M11 = 1.0f - (2.0f * y2) - (2.0f * z2);
+			result.M12 = (2.0f * x * y) - (2.0f * z * w);
+			result.M13 = (2.0f * x * z) + (2.0f * y * w);
+
+			result.M21 = (2.0f * x * y) + (2.0f * z * w);
+			result.M22 = 1.0f - (2.0f * x2) - (2.0f * z2); 
+			result.M23 = (2.0f * y * z) - (2.0f * x * w);
+			
+			result.M31 = (2.0f * x * z) - (2.0f * y * w);
+			result.M32 = (2.0f * y * z) + (2.0f * x * w);
+			result.M33 = 1.0f - (2.0f * x2) - (2.0f * y2);
 		}
 		
 		public static Matrix CreateFromYawPitchRoll (float yaw, float pitch, float roll)
